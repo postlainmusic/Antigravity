@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Antigravity</string>
+    <string name="agent_title">AI Agent Platform</string>
+    <string name="editor_title">Code Editor</string>
+    <string name="preview_title">Live Preview</string>
+    <string name="terminal_title">Terminal</string>
+    <string name="git_title">Git Diff</string>
+</resources>

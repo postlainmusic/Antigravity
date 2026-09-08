@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "project-tools": {
+      "command": "node",
+      "args": [
+        ".agents/scripts/project-health-check.js",
+        "--json"
+      ],
+      "env": {
+        "ANTIGRAVITY_ENV": "production"
+      }
+    }
+  }
+}

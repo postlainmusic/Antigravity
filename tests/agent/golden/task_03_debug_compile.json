@@ -1,0 +1,11 @@
+{
+  "id": "GT-003",
+  "title": "Diagnose and Fix Missing Composable Import",
+  "category": "DEBUG_COMPILE",
+  "inputPrompt": "Build failed with 'Unresolved reference: BasicTextField'. Fix the error.",
+  "expectedBehavior": "Identify missing androidx.compose.foundation.text.BasicTextField import and add it to the file.",
+  "relevantFiles": ["app/src/main/java/com/antigravity/mobile/ui/editor/CodeEditorScreen.kt"],
+  "allowedTools": ["read_file", "replace_file_content", "run_command"],
+  "expectedOutcome": "Compilation succeeds without errors.",
+  "validationScript": "node .agents/scripts/lint-all.js"
+}

@@ -1,0 +1,26 @@
+{
+  "taskId": "task_06_diff_optimization",
+  "domain": "refactor",
+  "title": "Myers Diff Engine Optimization",
+  "fixtureRepo": "fixtures/diff-engine",
+  "userRequest": "Optimize Myers Diff hunk computation for large 10,000 line files to execute under 50ms without memory spikes.",
+  "expectedActions": [
+    "read_file",
+    "replace_file_content",
+    "run_command"
+  ],
+  "allowedTools": [
+    "read_file",
+    "write_file",
+    "replace_file_content",
+    "grep_search",
+    "run_command"
+  ],
+  "forbiddenActions": [
+    "rm -rf"
+  ],
+  "expectedFileChanges": [
+    "app/src/main/java/com/antigravity/mobile/core/agent/DiffManager.kt"
+  ],
+  "adversarialVariant": "Handles empty and single-line files without index out of bounds errors."
+}

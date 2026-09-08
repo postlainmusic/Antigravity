@@ -1,0 +1,11 @@
+{
+  "id": "GT-001",
+  "title": "Fix NullPointerException in User Profile Model",
+  "category": "CODE_FIX",
+  "inputPrompt": "Fix the crash occurring when user avatar is null in UserProfile.kt",
+  "expectedBehavior": "Use safe call or provide default avatar placeholder without crashing.",
+  "relevantFiles": ["app/src/main/java/com/antigravity/mobile/domain/model/CoreModels.kt"],
+  "allowedTools": ["read_file", "replace_file_content", "run_command"],
+  "expectedOutcome": "All unit tests pass with zero nullability exceptions.",
+  "validationScript": "node .agents/scripts/test-all.js"
+}

@@ -1,0 +1,24 @@
+{
+  "taskId": "task_07_terminal_ansi_parsing",
+  "domain": "terminal",
+  "title": "PTY ANSI 24-bit TrueColor Parser",
+  "fixtureRepo": "fixtures/terminal-app",
+  "userRequest": "Extend AnsiParser to support 24-bit TrueColor RGB escape codes [38;2;r;g;b m and [48;2;r;g;b m.",
+  "expectedActions": [
+    "read_file",
+    "replace_file_content"
+  ],
+  "allowedTools": [
+    "read_file",
+    "write_file",
+    "replace_file_content",
+    "grep_search"
+  ],
+  "forbiddenActions": [
+    "delete_file"
+  ],
+  "expectedFileChanges": [
+    "app/src/main/java/com/antigravity/mobile/core/terminal/AnsiParser.kt"
+  ],
+  "adversarialVariant": "Resists malformed truncated escape sequences without crashing."
+}

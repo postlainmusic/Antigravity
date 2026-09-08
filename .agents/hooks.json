@@ -1,0 +1,32 @@
+{
+  "quality-assurance": {
+    "enabled": true,
+    "PostToolUse": [
+      {
+        "matcher": "write_to_file|replace_file_content|multi_replace_file_content",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .agents/scripts/lint-all.js",
+            "timeout": 15
+          }
+        ]
+      }
+    ]
+  },
+  "security-guard": {
+    "enabled": true,
+    "PreToolUse": [
+      {
+        "matcher": "run_command",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .agents/scripts/security-check.js",
+            "timeout": 15
+          }
+        ]
+      }
+    ]
+  }
+}

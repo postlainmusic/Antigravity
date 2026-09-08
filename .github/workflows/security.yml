@@ -1,0 +1,45 @@
+name: Antigravity Security & Red Team Gate
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  schedule:
+    - cron: '0 2 * * *' # Nightly at 2:00 AM UTC
+  workflow_dispatch:
+
+concurrency:
+  group: security-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  security-audit:
+    name: Red Team & Sandbox Boundary Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js Environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Scan Repository for Exposed Secrets
+        run: node .agents/scripts/security-check.js
+
+      - name: Test Path Traversal & Workspace Escape
+        run: node tests/security/workspace_escape/run-test.js
+
+      - name: Test Secret Boundary Redaction
+        run: node tests/security/secret_boundary/run-test.js
+
+      - name: Test MCP Trust Boundary Isolation
+        run: node tests/security/mcp_trust_boundary/run-test.js
+
+      - name: Test Adversarial Prompt Injections
+        run: node .agents/scripts/vertical-slice-harness.js
+
+      - name: Verify Process Death & Rollback
+        run: node tests/recovery/process_death/run-test.js

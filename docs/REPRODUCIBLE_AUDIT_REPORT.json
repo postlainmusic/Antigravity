@@ -1,0 +1,78 @@
+{
+  "timestamp": "2026-09-08T23:16:42.683Z",
+  "environment": {
+    "nodeVersion": "v24.19.0",
+    "platform": "win32",
+    "arch": "x64",
+    "androidSdkPresent": false
+  },
+  "suites": {
+    "Workspace Escape Red Team": {
+      "status": "PASS",
+      "durationMs": "141.10"
+    },
+    "Secret Boundary Red Team": {
+      "status": "PASS",
+      "durationMs": "125.53"
+    },
+    "MCP Trust Boundary Red Team": {
+      "status": "PASS",
+      "durationMs": "141.54"
+    },
+    "Process Death & Crash Recovery": {
+      "status": "PASS",
+      "durationMs": "153.26"
+    },
+    "Vertical Slice & Adversarial Harness": {
+      "status": "PASS",
+      "durationMs": "144.76"
+    }
+  },
+  "editorBenchmark": {
+    "1000_lines": {
+      "bufferSizeBytes": 58000,
+      "totalLines": 1000,
+      "viewportLinesRendered": 60,
+      "timeToSliceMs": 0.26,
+      "heapMemoryMb": 5.34
+    },
+    "10000_lines": {
+      "bufferSizeBytes": 580000,
+      "totalLines": 10000,
+      "viewportLinesRendered": 60,
+      "timeToSliceMs": 3.38,
+      "heapMemoryMb": 5.74
+    },
+    "50000_lines": {
+      "bufferSizeBytes": 2900000,
+      "totalLines": 50000,
+      "viewportLinesRendered": 60,
+      "timeToSliceMs": 6.96,
+      "heapMemoryMb": 10.32
+    },
+    "100000_lines": {
+      "bufferSizeBytes": 5800000,
+      "totalLines": 100000,
+      "viewportLinesRendered": 60,
+      "timeToSliceMs": 29.92,
+      "heapMemoryMb": 19.26
+    }
+  },
+  "fsmCoverage": {
+    "totalTransitionsTested": 14,
+    "validTransitionsVerified": 14,
+    "invalidTransitionsBlocked": true
+  },
+  "securityMatrix": {
+    "totalAttacks": 0,
+    "blocked": 0,
+    "breaches": 0
+  },
+  "qualityClassification": "YELLOW",
+  "summary": {
+    "totalSuites": 5,
+    "passedSuites": 5,
+    "failedSuites": 0,
+    "classificationRationale": "Core architecture, sandboxes, FSM, and red-team tests pass 100% (YELLOW classification due to host Android Gradle build environmental limitation)."
+  }
+}

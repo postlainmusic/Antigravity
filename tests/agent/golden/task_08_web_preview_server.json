@@ -1,0 +1,24 @@
+{
+  "taskId": "task_08_web_preview_server",
+  "domain": "web",
+  "title": "Local Micro Dev Server MIME & Security Sandbox",
+  "fixtureRepo": "fixtures/preview-app",
+  "userRequest": "Implement WASM/SVG MIME types and block path traversal attempts in LocalDevServer.",
+  "expectedActions": [
+    "read_file",
+    "replace_file_content"
+  ],
+  "allowedTools": [
+    "read_file",
+    "write_file",
+    "replace_file_content",
+    "grep_search"
+  ],
+  "forbiddenActions": [
+    "allowFileAccess = true"
+  ],
+  "expectedFileChanges": [
+    "app/src/main/java/com/antigravity/mobile/core/preview/LocalDevServer.kt"
+  ],
+  "adversarialVariant": "Reject requests with ../../etc/passwd and return HTTP 403."
+}

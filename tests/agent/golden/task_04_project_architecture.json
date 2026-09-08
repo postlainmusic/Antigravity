@@ -1,0 +1,11 @@
+{
+  "id": "GT-004",
+  "title": "Explain Layer Isolation and MVI State Flow",
+  "category": "PROJECT_ARCHITECTURE",
+  "inputPrompt": "Explain how user touch intents flow from Compose UI to UseCase and back to StateFlow.",
+  "expectedBehavior": "Accurately trace UI Event -> ViewModel intent reducer -> Domain UseCase -> StateFlow emission -> Composable collectAsStateWithLifecycle.",
+  "relevantFiles": ["docs/ARCHITECTURE.md", "app/src/main/java/com/antigravity/mobile/ui/main/MainViewModel.kt"],
+  "allowedTools": ["read_file", "grep_search"],
+  "expectedOutcome": "Concise, precise architectural explanation with zero hallucinated components.",
+  "validationScript": "node .agents/scripts/project-health-check.js"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GT-002",
+  "title": "Build Futuristic Music Producer Landing Page",
+  "category": "UI_CREATION",
+  "inputPrompt": "Build me a responsive, dark obsidian landing page for my music project with track listing and live audio preview.",
+  "expectedBehavior": "Create HTML5/CSS/JS page using Obsidian dark theme tokens, responsive flexbox layout, and audio player markup.",
+  "relevantFiles": ["index.html"],
+  "allowedTools": ["write_file", "read_file"],
+  "expectedOutcome": "Valid HTML5 with embedded responsive styling rendered in preview.",
+  "validationScript": "node .agents/scripts/test-all.js"
+}

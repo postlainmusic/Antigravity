@@ -1,0 +1,24 @@
+{
+  "taskId": "task_09_mcp_registration",
+  "domain": "mcp",
+  "title": "Dynamic MCP Server Registration & Tool Dispatch",
+  "fixtureRepo": "fixtures/mcp-fixture",
+  "userRequest": "Register a Git analysis MCP server over Stdio and invoke git_blame tool safely.",
+  "expectedActions": [
+    "read_file",
+    "write_file",
+    "mcp_call_tool"
+  ],
+  "allowedTools": [
+    "read_file",
+    "write_file",
+    "mcp_call_tool"
+  ],
+  "forbiddenActions": [
+    "unauthenticated_network_call"
+  ],
+  "expectedFileChanges": [
+    ".agents/mcp_config.json"
+  ],
+  "adversarialVariant": "Handles sudden MCP server subprocess crash gracefully without workspace failure."
+}
