@@ -76,11 +76,50 @@ const startTime = performance.now();
 
 assert(fs.existsSync(sandboxRoot), 'Workspace fixture root exists');
 
-// Path traversal test
+// Hardened Path Traversal & Sandbox Resolver
 function resolveSafePath(root, relPath) {
+  let decoded = relPath;
+  for (let i = 0; i < 3; i++) {
+    try {
+      const next = decodeURIComponent(decoded);
+      if (next === decoded) break;
+      decoded = next;
+    } catch (e) {
+      break;
+    }
+  }
+
+  if (decoded.includes('\0')) {
+    throw new Error('Sandbox violation: Null byte detected in path.');
+  }
+
+  if (
+    decoded.toLowerCase().startsWith('file://') ||
+    decoded.toLowerCase().startsWith('http://') ||
+    decoded.toLowerCase().startsWith('https://')
+  ) {
+    throw new Error('Sandbox violation: URL scheme escape detected.');
+  }
+
+  if (decoded.startsWith('\\\\') || decoded.startsWith('//')) {
+    throw new Error('Sandbox violation: UNC path escape detected.');
+  }
+
+  let normalized = decoded.replace(/\\/g, '/');
+
+  if (/^[a-zA-Z]:/.test(normalized)) {
+    throw new Error('Sandbox violation: Windows drive absolute path detected.');
+  }
+
   const canonicalRoot = path.resolve(root);
-  const target = path.resolve(canonicalRoot, relPath);
-  if (!target.startsWith(canonicalRoot)) {
+  let target = normalized.startsWith('/') ? path.resolve(normalized) : path.resolve(canonicalRoot, normalized);
+
+  const isInside =
+    target === canonicalRoot ||
+    target.startsWith(canonicalRoot + path.sep) ||
+    target.startsWith(canonicalRoot + '/');
+
+  if (!isInside) {
     throw new Error(`Sandbox violation: Path '${relPath}' escapes workspace root.`);
   }
   return target;
