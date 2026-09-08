@@ -83,11 +83,21 @@ jobs:
       - name: Grant Execute Permission to Gradle Wrapper
         run: chmod +x gradlew
 
+      - name: Validate Gradle Environment Diagnostics
+        run: |
+          echo "=== Java Environment ==="
+          java -version
+          echo "=== Gradle Wrapper Permissions ==="
+          ls -la gradlew
+          head -n 1 gradlew
+          echo "=== Gradle Wrapper Execution ==="
+          ./gradlew --version
+
       - name: Run Android Unit Tests
-        run: ./gradlew testDebugUnitTest --continue
+        run: ./gradlew testDebugUnitTest
 
       - name: Run Android Lint Check
-        run: ./gradlew lintDebug --continue
+        run: ./gradlew lintDebug
 
       - name: Assemble Debug APK
         run: ./gradlew assembleDebug

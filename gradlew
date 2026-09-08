@@ -155,10 +155,5 @@ if [ "$cygwin" = "true" -o "$msys" = "true" ] ; then
     eval set -- "$@"
 fi
 
-# Collect all arguments for the java command
-set -- "$@" \
-    "-Dorg.gradle.appname=$APP_BASE_NAME" \
-    -classpath "$CLASSPATH" \
-    org.gradle.wrapper.GradleWrapperMain
-
-exec "$JAVACMD" "$@"
+# Execute Gradle with arguments placed strictly after main class
+exec "$JAVACMD" "-Dorg.gradle.appname=$APP_BASE_NAME" -classpath "$CLASSPATH" org.gradle.wrapper.GradleWrapperMain "$@"
