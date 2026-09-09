@@ -1,12 +1,11 @@
 package com.antigravity.mobile.ui.main
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AutoAwesome
@@ -44,7 +43,6 @@ import com.antigravity.mobile.ui.theme.DarkSurfaceElevated
 import com.antigravity.mobile.ui.theme.DeepObsidian
 import com.antigravity.mobile.ui.theme.IndigoGlow
 import com.antigravity.mobile.ui.theme.TextMuted
-import com.antigravity.mobile.ui.theme.TextPrimary
 import kotlinx.coroutines.launch
 
 @Composable
@@ -57,11 +55,7 @@ fun MainScreen(
     val scope = rememberCoroutineScope()
 
     LaunchedEffect(uiState.isDrawerOpen) {
-        if (uiState.isDrawerOpen) {
-            drawerState.open()
-        } else {
-            drawerState.close()
-        }
+        if (uiState.isDrawerOpen) drawerState.open() else drawerState.close()
     }
 
     ModalNavigationDrawer(
@@ -93,6 +87,7 @@ fun MainScreen(
                 )
             },
             containerColor = DeepObsidian,
+            contentWindowInsets = WindowInsets(0, 0, 0, 0),
             modifier = modifier.fillMaxSize()
         ) { padding ->
             Box(
@@ -134,7 +129,6 @@ fun MainScreen(
                     )
                 }
 
-                // Gated User Permission Dialog if action requires approval
                 uiState.pendingAction?.let { action ->
                     PermissionDialog(
                         action = action,
@@ -157,6 +151,7 @@ fun AntigravityBottomNav(
         containerColor = DarkSurface,
         modifier = modifier
             .fillMaxWidth()
+            .navigationBarsPadding()
             .border(1.dp, DarkBorder)
     ) {
         NavigationBarItem(
