@@ -19,6 +19,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flow
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 
@@ -233,15 +236,10 @@ class AgentOrchestrator(
     }
 
     private fun parseArguments(argumentsJson: String): Map<String, String> {
-        val trimmed = argumentsJson.trim().removePrefix("{").removeSuffix("}")
-        if (trimmed.isBlank()) return emptyMap()
-        return Regex("\\\"([^\\\"]+)\\\"\\s*:\\s*\\\"((?:\\\\.|[^\\\"])*)\\\"")
-            .findAll(trimmed)
-            .associate { match ->
-                val value = match.groupValues[2]
-                    .replace("\\\\", "\\")
-                    .replace("\\\"", "\"")
-                match.groupValues[1] to value
-            }
+        return runCatching {
+            Json.parseToJsonElement(argumentsJson)
+                .jsonObject
+                .mapValues { it.value.jsonPrimitive.content }
+        }.getOrDefault(emptyMap())
     }
 }
