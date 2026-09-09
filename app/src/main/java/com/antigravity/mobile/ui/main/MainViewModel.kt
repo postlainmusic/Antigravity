@@ -28,6 +28,7 @@ class MainViewModel(
     private val terminalManager = container.terminalManager
     private val devServer = container.devServer
     private val credentialStore = container.credentialStore
+    private val agentOrchestrator = container.agentOrchestrator
 
     private val _uiState = MutableStateFlow(MainUiState())
     val uiState: StateFlow<MainUiState> = _uiState.asStateFlow()
@@ -109,21 +110,23 @@ class MainViewModel(
         _uiState.update {
             it.copy(
                 chatMessages = it.chatMessages + userMsg + agentBubble,
-                agentStatus = AgentStatus.THINKING
+                agentStatus = AgentStatus.THINKING,
+                errorBanner = null
             )
         }
 
         viewModelScope.launch {
             executeAgentTaskUseCase(prompt, _uiState.value.activeFilePath).collect { event ->
                 when (event) {
-                    is AgentEvent.Thinking -> {
-                        updateAgentMessage(event.content)
-                    }
-                    is AgentEvent.PlanUpdated -> {
-                        _uiState.update { it.copy(currentPlan = event.steps) }
-                    }
+                    is AgentEvent.Thinking -> updateAgentMessage(event.content)
+                    is AgentEvent.PlanUpdated -> _uiState.update { it.copy(currentPlan = event.steps) }
                     is AgentEvent.AwaitingApproval -> {
-                        _uiState.update { it.copy(pendingAction = event.action) }
+                        _uiState.update {
+                            it.copy(
+                                pendingAction = event.action,
+                                agentStatus = AgentStatus.AWAITING_APPROVAL
+                            )
+                        }
                     }
                     is AgentEvent.FileDiffCreated -> {
                         _uiState.update {
@@ -146,9 +149,13 @@ class MainViewModel(
                         _uiState.update {
                             it.copy(
                                 agentStatus = AgentStatus.FAILED,
-                                errorBanner = event.message
+                                errorBanner = event.message,
+                                pendingAction = null
                             )
                         }
+                    }
+                    is AgentEvent.StateChanged -> {
+                        _uiState.update { it.copy(agentStatus = event.newStatus) }
                     }
                     else -> Unit
                 }
@@ -161,7 +168,7 @@ class MainViewModel(
             val msgs = state.chatMessages.toMutableList()
             val last = msgs.lastOrNull()
             if (last != null && last.role == MessageRole.AGENT) {
-                msgs[msgs.size - 1] = last.copy(content = last.content + chunk)
+                msgs[msgs.size - 1] = last.copy(content = last.content + chunk, isStreaming = true)
             }
             state.copy(chatMessages = msgs)
         }
@@ -203,10 +210,12 @@ class MainViewModel(
 
     private fun onApproveAction(actionId: String) {
         _uiState.update { it.copy(pendingAction = null, agentStatus = AgentStatus.EXECUTING_TOOL) }
+        agentOrchestrator.resolveApproval(actionId, approved = true)
     }
 
     private fun onRejectAction(actionId: String) {
         _uiState.update { it.copy(pendingAction = null, agentStatus = AgentStatus.IDLE) }
+        agentOrchestrator.resolveApproval(actionId, approved = false)
     }
 
     private fun onApplyDiff(diff: FileDiff) {
