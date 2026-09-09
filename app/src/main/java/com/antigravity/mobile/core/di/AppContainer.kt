@@ -64,7 +64,8 @@ class DefaultAppContainer(
         toolRegistry = toolRegistry,
         contextEngine = contextEngine,
         permissionManager = permissionManager,
-        diffManager = diffManager
+        diffManager = diffManager,
+        sandboxManager = sandboxManager
     )
 
     override val terminalManager: TerminalManager = TerminalManager(sandboxManager)
