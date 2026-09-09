@@ -47,7 +47,8 @@ class AgentOrchestratorTest {
             toolRegistry = toolRegistry,
             contextEngine = contextEngine,
             permissionManager = permissionManager,
-            diffManager = diffManager
+            diffManager = diffManager,
+            sandboxManager = sandboxManager
         )
     }
 
