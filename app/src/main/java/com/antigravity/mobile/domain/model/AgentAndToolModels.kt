@@ -71,6 +71,15 @@ enum class PermissionTier {
 }
 
 @Serializable
+sealed interface PermissionDecision {
+    data object Approved : PermissionDecision
+    data class RequiresApproval(val action: PendingAction) : PermissionDecision
+    data class Denied(val reason: String) : PermissionDecision
+    data class Blocked(val reason: String) : PermissionDecision
+    data class SecurityViolation(val violationMessage: String) : PermissionDecision
+}
+
+@Serializable
 data class ToolParameter(
     val name: String,
     val type: String,

@@ -2,57 +2,32 @@ package com.antigravity.mobile.ui.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.antigravity.mobile.core.agent.AgentOrchestrator
-import com.antigravity.mobile.core.agent.ContextEngine
-import com.antigravity.mobile.core.agent.DiffManager
-import com.antigravity.mobile.core.agent.PermissionManager
-import com.antigravity.mobile.core.model.GeminiModelProvider
-import com.antigravity.mobile.core.preview.LocalDevServer
-import com.antigravity.mobile.core.security.SandboxManager
-import com.antigravity.mobile.core.terminal.TerminalManager
-import com.antigravity.mobile.core.tools.ToolRegistry
+import com.antigravity.mobile.core.di.AppContainer
+import com.antigravity.mobile.core.di.DefaultAppContainer
 import com.antigravity.mobile.domain.model.AgentEvent
 import com.antigravity.mobile.domain.model.AgentStatus
 import com.antigravity.mobile.domain.model.ChatMessage
+import com.antigravity.mobile.domain.model.FileDiff
 import com.antigravity.mobile.domain.model.MessageRole
-import com.antigravity.mobile.domain.usecase.ApplyFileDiffUseCase
-import com.antigravity.mobile.domain.usecase.ExecuteAgentTaskUseCase
-import com.antigravity.mobile.domain.usecase.IndexWorkspaceUseCase
-import com.antigravity.mobile.domain.usecase.RunTerminalCommandUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.io.File
 import java.util.UUID
 
 class MainViewModel(
-    workspaceDir: File = File(".")
+    private val container: AppContainer = DefaultAppContainer()
 ) : ViewModel() {
 
-    private val sandboxManager = SandboxManager(workspaceDir)
-    private val toolRegistry = ToolRegistry(sandboxManager)
-    private val contextEngine = ContextEngine(sandboxManager)
-    private val permissionManager = PermissionManager()
-    private val diffManager = DiffManager()
-    private val modelProvider = GeminiModelProvider()
-
-    private val orchestrator = AgentOrchestrator(
-        modelProvider = modelProvider,
-        toolRegistry = toolRegistry,
-        contextEngine = contextEngine,
-        permissionManager = permissionManager,
-        diffManager = diffManager
-    )
-
-    private val terminalManager = TerminalManager(sandboxManager)
-    private val devServer = LocalDevServer(sandboxManager)
-
-    private val executeAgentTaskUseCase = ExecuteAgentTaskUseCase(orchestrator)
-    private val applyFileDiffUseCase = ApplyFileDiffUseCase(sandboxManager)
-    private val indexWorkspaceUseCase = IndexWorkspaceUseCase(sandboxManager)
-    private val runTerminalCommandUseCase = RunTerminalCommandUseCase(terminalManager)
+    private val sandboxManager = container.sandboxManager
+    private val executeAgentTaskUseCase = container.executeAgentTaskUseCase
+    private val applyFileDiffUseCase = container.applyFileDiffUseCase
+    private val indexWorkspaceUseCase = container.indexWorkspaceUseCase
+    private val runTerminalCommandUseCase = container.runTerminalCommandUseCase
+    private val terminalManager = container.terminalManager
+    private val devServer = container.devServer
+    private val credentialStore = container.credentialStore
 
     private val _uiState = MutableStateFlow(MainUiState())
     val uiState: StateFlow<MainUiState> = _uiState.asStateFlow()
@@ -78,6 +53,10 @@ class MainViewModel(
             is MainUiEvent.ToggleDrawer -> _uiState.update { it.copy(isDrawerOpen = event.open) }
             is MainUiEvent.ClearError -> _uiState.update { it.copy(errorBanner = null) }
         }
+    }
+
+    fun saveApiKey(providerId: String, apiKey: String) {
+        credentialStore.storeCredential(providerId, apiKey)
     }
 
     private fun loadWorkspace() {
@@ -166,7 +145,7 @@ class MainViewModel(
                     is AgentEvent.Error -> {
                         _uiState.update {
                             it.copy(
-                                agentStatus = AgentStatus.ERROR,
+                                agentStatus = AgentStatus.FAILED,
                                 errorBanner = event.message
                             )
                         }
@@ -230,7 +209,7 @@ class MainViewModel(
         _uiState.update { it.copy(pendingAction = null, agentStatus = AgentStatus.IDLE) }
     }
 
-    private fun onApplyDiff(diff: com.antigravity.mobile.domain.model.FileDiff) {
+    private fun onApplyDiff(diff: FileDiff) {
         applyFileDiffUseCase(diff).onSuccess {
             _uiState.update {
                 it.copy(

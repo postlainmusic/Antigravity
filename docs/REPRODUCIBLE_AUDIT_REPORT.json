@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-09-08T23:39:41.870Z",
+  "timestamp": "2026-09-09T00:02:02.908Z",
   "environment": {
     "nodeVersion": "v24.19.0",
     "platform": "win32",
@@ -9,23 +9,23 @@
   "suites": {
     "Workspace Escape Red Team": {
       "status": "PASS",
-      "durationMs": "141.79"
+      "durationMs": "163.82"
     },
     "Secret Boundary Red Team": {
       "status": "PASS",
-      "durationMs": "107.92"
+      "durationMs": "121.09"
     },
     "MCP Trust Boundary Red Team": {
       "status": "PASS",
-      "durationMs": "110.26"
+      "durationMs": "129.88"
     },
     "Process Death & Crash Recovery": {
       "status": "PASS",
-      "durationMs": "132.64"
+      "durationMs": "144.24"
     },
     "Vertical Slice & Adversarial Harness": {
       "status": "PASS",
-      "durationMs": "144.78"
+      "durationMs": "147.43"
     }
   },
   "editorBenchmark": {
@@ -33,28 +33,28 @@
       "bufferSizeBytes": 58000,
       "totalLines": 1000,
       "viewportLinesRendered": 60,
-      "timeToSliceMs": 6.24,
+      "timeToSliceMs": 0.97,
       "heapMemoryMb": 5.34
     },
     "10000_lines": {
       "bufferSizeBytes": 580000,
       "totalLines": 10000,
       "viewportLinesRendered": 60,
-      "timeToSliceMs": 2.35,
-      "heapMemoryMb": 5.71
+      "timeToSliceMs": 3.38,
+      "heapMemoryMb": 5.74
     },
     "50000_lines": {
       "bufferSizeBytes": 2900000,
       "totalLines": 50000,
       "viewportLinesRendered": 60,
-      "timeToSliceMs": 7.1,
-      "heapMemoryMb": 10.32
+      "timeToSliceMs": 8.62,
+      "heapMemoryMb": 10.35
     },
     "100000_lines": {
       "bufferSizeBytes": 5800000,
       "totalLines": 100000,
       "viewportLinesRendered": 60,
-      "timeToSliceMs": 22.15,
+      "timeToSliceMs": 31.37,
       "heapMemoryMb": 19.26
     }
   },
